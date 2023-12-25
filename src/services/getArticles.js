@@ -8,7 +8,6 @@ export default class GetArticles {
         }
 
         const result = await res.json()
-        console.log(result.articles)
-        return result.articles
+        return result
     }
 }

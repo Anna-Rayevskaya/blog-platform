@@ -25,7 +25,7 @@ function ItemArticles ({title, tagList, body, username, image, data}){
         return (
             <>
                 {arr.map((tag) => (
-                    <span className={classes.tag} key={tag}>
+                    <span className={classes.tag} key={Math.random().toString(36).substring(2)}>
                         {trimText(tag, tag)}
                     </span>
                 ))}
