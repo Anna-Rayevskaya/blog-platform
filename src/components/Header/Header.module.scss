@@ -1,0 +1,29 @@
+.header {
+  width: auto;
+  height: 60px;
+  display: flex;
+  background: var(--background-color-base, #fff);
+  justify-content: space-between;
+  padding: 10px 22px;
+
+  span {
+    display: block;
+    margin-right: auto;
+    padding: 15px;
+  }
+
+  .signIn {
+    width: 109px;
+    height: 51px;
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .signUp {
+    width: 109px;
+    height: 51px;
+    border-radius: 5px;
+    border: 1px solid var(--success-color, #52c41a);
+    background-color: transparent;
+  }
+}
