@@ -1,0 +1,13 @@
+.content {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0px;
+
+  .article {
+    width: 941px;
+    height: 870px;
+    background: var(--background-color-base, #fff);
+    padding: 19px;
+    padding-right: 42px;
+  }
+}
