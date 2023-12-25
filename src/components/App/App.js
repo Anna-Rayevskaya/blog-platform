@@ -4,13 +4,9 @@ import ListArticles from '../List-articles'
 import { useState } from 'react';
 
 function App() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   function changePage (n){
-    if(n=== 1){
-    setPage(0)
-    return 
-    }
     setPage(n)
   }
   return (

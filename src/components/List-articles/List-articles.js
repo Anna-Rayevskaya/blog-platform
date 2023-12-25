@@ -8,21 +8,18 @@ function ListArticles ({page}){
     const [articles, getListArticles] = useState([])
     const [loading, getLoading] = useState(true)
     const [error, getError] = useState(false)
-    const [articlesCount, getArticlesCount]= useState(0)
+    // const [articlesCount, getArticlesCount]= useState(0)
     const [currentArticles, getCurrentArticles] = useState(getArticles(page))
 
-
-    console.log(page)
+    console.log(articles)
     useEffect(()=>{
-        if(articles.length === 0 || articles.length< articlesCount){
+        if(articles.length === 0){
             const getArticles = new GetArticles()
             getArticles
             .getAllArticles()
             .then((articles) => {
-                getListArticles(prevListArticles => [...prevListArticles, ...articles.articles])
+                getListArticles(articles.articles)
                 getLoading(false)
-                getArticlesCount(articles.articlesCount)
-                
             })
             .catch(()=> {
                 getLoading(false)
@@ -32,9 +29,7 @@ function ListArticles ({page}){
     }, [articles])
 
     useEffect(()=>{
-        if(articles.length !==0){
             getCurrentArticles(getArticles(page))
-        }
       }, [page, articles])
 
 
@@ -55,9 +50,16 @@ function ListArticles ({page}){
       }
 
       function getArticles (page){
-        const articleStart = page* 20;
-        const listArticles = articles.slice(articleStart, articleStart+ 20)
+        const articleStart = (page-1)* 5;
+        const articleEnd  = articles[articleStart+ 5] ? articleStart+ 5 : articles.length
+        const listArticles = articles.slice(articleStart, articleEnd)
         return listArticles
+      }
+
+      if(currentArticles.length === 0){
+        return(
+          <div className={classes.error}>Статей больше нет!</div>
+        )
       }
 
     return <div className={classes.content}>
