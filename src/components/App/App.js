@@ -5,11 +5,13 @@ import Header from '../Header'
 import ListArticles from '../List-articles'
 import ExpandedArticle from '../Expanded-article'
 import LoginPage from '../Login-page'
+import RegistrationPage from '../Registration-page'
+import EditProfilePage from '../EditProfile-page'
 
 function App() {
   return (
     <div >
-      
+       
       <Routes>
       <Route path='/' element={<Header/>}>
         <Route path='articles/' index element={
@@ -21,6 +23,9 @@ function App() {
 
         <Route path='articles/:id' element={<ExpandedArticle/>}/>
         <Route path='sign-in' element={<LoginPage/>}/>
+        <Route path='sign-up' element={<RegistrationPage/>}/>
+        <Route path='profile' element={<EditProfilePage/>}/>
+
         </Route>
       </Routes>
     </div>
