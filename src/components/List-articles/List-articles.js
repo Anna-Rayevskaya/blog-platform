@@ -1,37 +1,25 @@
 import classes from './List-articles.module.scss'
-import ItemArticles from '../Item-article'
-import { useEffect, useState } from 'react'
-import GetArticles from '../../services/getArticles'
+import { useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {Spin } from 'antd'
+import { fetchArticles } from '../../store/articlesReducer'
 
-function ListArticles ({page}){
-    const [articles, getListArticles] = useState([])
-    const [loading, getLoading] = useState(true)
-    const [error, getError] = useState(false)
-    // const [articlesCount, getArticlesCount]= useState(0)
-    const [currentArticles, getCurrentArticles] = useState(getArticles(page))
+import ItemArticles from '../Item-article'
+
+function ListArticles (){
+  const articles = useSelector((state)=> state.articles.articles)
+  const loading = useSelector((state)=> state.articles.loading)
+  const error = useSelector((state)=> state.articles.error)
+  const page = useSelector((state)=> state.articles.page)
+
+  console.log(page)
+
+    const dispatch = useDispatch()
 
     console.log(articles)
     useEffect(()=>{
-        if(articles.length === 0){
-            const getArticles = new GetArticles()
-            getArticles
-            .getAllArticles()
-            .then((articles) => {
-                getListArticles(articles.articles)
-                getLoading(false)
-            })
-            .catch(()=> {
-                getLoading(false)
-                getError(true)
-            })
-        }
-    }, [articles])
-
-    useEffect(()=>{
-            getCurrentArticles(getArticles(page))
-      }, [page, articles])
-
+          dispatch(fetchArticles((page-1)* 5))
+    }, [dispatch, page])
 
     if (loading) {
         return (
@@ -45,27 +33,15 @@ function ListArticles ({page}){
         return <div className={classes.error}>Произошла ошибка загрузки!</div>
       }
 
-      function generateRandomId() {
-        return Math.random().toString(36).substring(2)
-      }
-
-      function getArticles (page){
-        const articleStart = (page-1)* 5;
-        const articleEnd  = articles[articleStart+ 5] ? articleStart+ 5 : articles.length
-        const listArticles = articles.slice(articleStart, articleEnd)
-        return listArticles
-      }
-
-      if(currentArticles.length === 0){
-        return(
-          <div className={classes.error}>Статей больше нет!</div>
-        )
+      if(articles.length === 0){
+        return <div className={classes.error} >Статей больше нет!</div>
       }
 
     return <div className={classes.content}>
-        {currentArticles.map((article)=>{
+        {articles.map((article)=>{
             return(<ItemArticles
-                        key={generateRandomId()}
+                        key={articles.slug}
+                        slug={article.slug}
                         title={article.title}
                         tagList={article.tagList}
                         body={article.body}

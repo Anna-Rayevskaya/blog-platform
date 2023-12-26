@@ -1,7 +1,8 @@
 import classes from './Item-article.module.scss'
 import { format } from "date-fns";
+import { Link } from 'react-router-dom'
 
-function ItemArticles ({title, tagList, body, username, image, data}){
+function ItemArticles ({title, tagList, body, username, image, data, slug}){
 
     function trimText(text, title) {
         if (title) {
@@ -32,8 +33,11 @@ function ItemArticles ({title, tagList, body, username, image, data}){
             </>
         );
     }
+
+    const link= `/articles/${slug}`
+
     return <div className={classes.content}>
-        <h4>{trimText(title, title)}</h4>
+        <Link to={link} className={classes.link}><h4 className={classes.h4}>{trimText(title, title)}</h4></Link>
         <div>{getTags(tagList)}</div>
         <div className={classes.body}>{trimText(body)}</div>
         <div className={classes.user}>

@@ -5,9 +5,31 @@
 
   .article {
     width: 941px;
-    height: 870px;
+    height: auto;
     background: var(--background-color-base, #fff);
     padding: 19px;
     padding-right: 42px;
+    position: relative;
   }
+
+  .body {
+    width: 682px;
+    color: var(--text-color, rgba(0, 0, 0, 0.75));
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    padding-top: 5px;
+    overflow: hidden;
+  }
+}
+
+.loading,
+.error {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.05);
 }
