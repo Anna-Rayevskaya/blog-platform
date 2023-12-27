@@ -1,8 +1,13 @@
 import classes from "./Registration-page.module.scss";
 import classesLogin from "../Login-page/Login-page.module.scss";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import {fetchToken} from '../../store/registrationReducer'
 
 function RegistrationPage() {
+  const error = useSelector((state) => state.registration.error)
+  const dispatch = useDispatch()
+
   const {
     register,
     handleSubmit,
@@ -10,16 +15,26 @@ function RegistrationPage() {
     reset,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const onSubmit = (data) => {
-    console.log(JSON.stringify(data)) 
+
+    const params = {"user":{
+      "username": String(data.username),
+      "email": String(data.email),
+      "password": String(data.password)}}
+      
+    dispatch(fetchToken(params))
+
     reset()
   };
   const password = watch('password')
+  const  checkbox = watch('checkbox', true) 
 
   const validatePassword = (value) =>  value === password || 'Пароли не совпадают'
+
+  const validateCheckbox = (value) => value === true || 'Необходимо согласие на обработку персональных данных'
 
   const toggle = (e) => {
     const checkboxes = document.querySelector(`.${classes["check-input"]}`);
@@ -33,11 +48,10 @@ function RegistrationPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
 
           <label className={classesLogin.label}>
-            Username
+            Username*
             <input
               type="text"
               placeholder="Username"
-              className={classesLogin.input}
               {...register("username", {
                 required:
                   "Поле обязательно для заполнения!",
@@ -50,6 +64,7 @@ function RegistrationPage() {
                   message: 'Поле должно содержать от 3 до 20 символов (включительно)'
                 },
               })}
+              className={`${classesLogin.input} ${errors.username ? classesLogin.errorInput : ''}`}
             />
             <div>
               {errors?.username && (
@@ -61,15 +76,19 @@ function RegistrationPage() {
           </label>
 
           <label className={classesLogin.label}>
-            Email address
+            Email address*
             <input
               type="email"
               placeholder="Email address"
-              className={classesLogin.input}
               {...register("email", {
                 required:
                   "Поле обязательно для заполнения!",
+                  pattern: {
+                    value: /^[\w\.-]+@[\w\.-]+\.\w+$/,
+                    message: 'email должен быть корректным почтовым адресом!'
+                  }
               })}
+              className={`${classesLogin.input} ${errors.email ? classesLogin.errorInput : ''}`}
             />
             <div>
               {errors?.email && (
@@ -81,15 +100,14 @@ function RegistrationPage() {
           </label>
 
           <label className={classesLogin.label}>
-            Password
+            Password*
             <input
               type="password"
               required
               placeholder="Password"
-              className={classesLogin.input}
               {...register("password", {
                 required:
-                  "Поле обязательно для заполнения и должно содержать от 6 до 40 символов (включительно)",
+                  "Поле обязательно для заполнения!",
                 minLength: {
                   value: 3,
                   message: 'Поле должно содержать от 6 до 40 символов (включительно)'
@@ -99,6 +117,7 @@ function RegistrationPage() {
                   message: 'Поле должно содержать от 6 до 40 символов (включительно)'
                 },
               })}
+              className={`${classesLogin.input} ${errors.password ? classesLogin.errorInput : ''}`}
             />
             <div>
               {errors?.password && (
@@ -109,17 +128,17 @@ function RegistrationPage() {
             </div>
           </label>
 
-          <label className={classesLogin.label}>Repeat Password
+          <label className={classesLogin.label}>Repeat Password*
           <input
             type="password"
             required
             placeholder="Password"
-            className={classesLogin.input}
             {...register("passwordRepeat", {
               required:
                 "Поле обязательно для заполнения!",
               validate: validatePassword,
             })}
+            className={`${classesLogin.input} ${errors.passwordRepeat ? classesLogin.errorInput : ''}`}
           />
             <div>
               {errors?.passwordRepeat && (
@@ -136,9 +155,19 @@ function RegistrationPage() {
               className={classes["check-input"]}
               onChange={toggle}
               defaultChecked
+              {...register("checkbox", {
+                validate: validateCheckbox,
+              })}
             />
             <span className={classes["check-box"]} />I agree to the processing
             of my personal information
+            <div>
+              {errors?.checkbox && (
+                <p className={classesLogin.errorMessage}>
+                  {errors?.checkbox?.message || "Error"}
+                </p>
+              )}
+            </div>
           </label>
 
           <div className={classesLogin.container}>
