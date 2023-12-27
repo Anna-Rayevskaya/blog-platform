@@ -5,7 +5,6 @@
 
   .form {
     width: 350px;
-    height: 278px;
     display: inline-flex;
     gap: 21px;
     padding: 48px 32px;
@@ -39,6 +38,9 @@ h3 {
   font-style: normal;
   font-weight: 400;
   line-height: 22px;
+  .errorMessage {
+    margin-top: 0;
+  }
 }
 
 .input {
@@ -68,8 +70,21 @@ h3 {
   background: var(--Daybreak-Blue-blue-6, #1890ff);
   border-color: transparent;
   color: #fff;
+  margin-top: 12px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.buttonSabmit:hover {
+  background: var(--Daybreak-Blue-blue-6, #3499f8);
+}
+
+.buttonSabmit:disabled {
+  background: var(--Daybreak-Blue-blue-6, #3675af);
+}
+
+.buttonSabmit:disabled:hover {
+  background: var(--Daybreak-Blue-blue-6, #3675af);
 }
 
 .text {
@@ -85,4 +100,14 @@ h3 {
   span {
     color: var(--Daybreak-Blue-blue-6, #1890ff);
   }
+}
+
+.errorMessage {
+  margin-top: 0;
+  color: var(--highlight-color, #f5222d);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
 }

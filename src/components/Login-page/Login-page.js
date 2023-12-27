@@ -21,12 +21,15 @@ function LoginPage (){
         placeholder='Password'
         className={classes.input}
       />
-      </form>
-      <div className={classes.container}>
+
+<div className={classes.container}>
       <button type='submit' className={classes.buttonSabmit}>Login</button>
       
       <p className={classes.text}>Don’t have an account? <span>Sign Up.</span></p>
       </div>
+      
+      </form>
+      
       
         </div>
          </div>

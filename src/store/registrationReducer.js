@@ -3,7 +3,7 @@ import { createSlice} from "@reduxjs/toolkit";
 const registrationReducer = createSlice({
     name: 'registration',
     initialState:{
-        registration: true,
+        registration: false,
     },
     reducers:{
     }
