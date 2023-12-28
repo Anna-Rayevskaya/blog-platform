@@ -1,4 +1,4 @@
-import { Routes, Route, Link} from 'react-router-dom'
+import { Routes, Route} from 'react-router-dom'
 
 import Footer from '../Footer'
 import Header from '../Header'
@@ -7,6 +7,7 @@ import ExpandedArticle from '../Expanded-article'
 import LoginPage from '../Login-page'
 import RegistrationPage from '../Registration-page'
 import EditProfilePage from '../EditProfile-page'
+import CreateArticle from '../Create-article'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path='sign-in' element={<LoginPage/>}/>
         <Route path='sign-up' element={<RegistrationPage/>}/>
         <Route path='profile' element={<EditProfilePage/>}/>
+        <Route path='new-article' element={<CreateArticle/>}/>
 
         </Route>
       </Routes>

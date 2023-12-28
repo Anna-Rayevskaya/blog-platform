@@ -35,9 +35,9 @@ function Header() {
     return (
       <>
         <div className={classes.header}>
-          <span>Realworld Blog</span>
+          <Link to='articles/'><span>Realworld Blog</span></Link>
           <div>
-            <Link to="#">
+            <Link to="new-article">
               <button className={classes.create}>Create article</button>
             </Link>
             <Link to="profile">

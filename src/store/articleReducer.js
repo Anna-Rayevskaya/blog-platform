@@ -8,7 +8,35 @@ export const fetchArticle = createAsyncThunk(
             const res = await fetch(url)
     
             if(!res.ok){
-                throw  new Error(`failed to get list of articles ${res.status}`)
+                throw  new Error(`couldn't get article ${res.status}`)
+            }
+    
+            const result = await res.json()
+            return result
+
+        } catch(error){
+            return rejectWithValue(error.message)
+        }
+    
+    }
+) 
+
+export const createArticle = createAsyncThunk(
+    'article/createArticle',
+    async (data, { rejectWithValue }) => {
+        try{
+            const url =  `https://blog.kata.academy/api/articles`
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${data.token}`
+                },
+                body: JSON.stringify(data.params)
+            })
+    
+            if(!res.ok){
+                throw  new Error(`couldn't create articles ${res.status}`)
             }
     
             const result = await res.json()
@@ -27,6 +55,7 @@ const articleReducer = createSlice({
         article: null,
         loading: true,
         error: false,
+        mainArticle: null,
     },
     reducers:{
     },
@@ -40,6 +69,13 @@ const articleReducer = createSlice({
           .addCase(fetchArticle.rejected, (state, action) => {
             state.loading = false
             state.error = true
+          })
+          .addCase(createArticle.fulfilled, (state, action) => {
+            state.mainArticle = action.payload.article
+            localStorage.getItem( 'mainArticle', action.payload.article)
+          })
+          .addCase(createArticle.rejected, (state, action) => {
+            console.log(action)
           })
         }
 })
