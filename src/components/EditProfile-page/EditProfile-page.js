@@ -1,16 +1,30 @@
 import classesLogin from "../Login-page/Login-page.module.scss";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import React from 'react';
+import {changeRegistration } from '../../store/registrationReducer'
+import {fetchUpdatedUser} from '../../store/registrationReducer'
 
 
 function EditProfilePage() {
 
-  const user = useSelector((state)=> state.registration.user)
-  console.log(user)
-  const [textName, setTextName] = useState(user.username);
-  const [textEmail, setTextEmail] = useState(user.email);
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  const [textName, setTextName] = useState('' && user.username);
+  const [textEmail, setTextEmail] = useState('' && user.email);
+
+  const dispatch = useDispatch()
+  const registration = useSelector((state)=> state.registration.registration)
+  const data =  localStorage.getItem('registration')
+  
+  useEffect(()=>{
+  
+  if(data){
+    dispatch(changeRegistration(data))
+  }
+  }, [dispatch])
+
 
     const {
       register,
@@ -21,20 +35,36 @@ function EditProfilePage() {
       mode: "onChange",
     });
   
-    const onSubmit = (data) => {
-      console.log(JSON.stringify(data)) 
+    const onSubmit = (params) => {
+      const newParams = {"user":{
+        "email": String(params.email),
+        "username": String(params.username),
+        "bio": "I work at State Farm.",
+        "image": String(params.image),
+        "password": String(params.password)}
+      }
+        console.log(newParams)
+      dispatch(fetchUpdatedUser({
+        'token': user.token,
+        'params': newParams,
+
+      }))
       reset()
     };
 
     const handleInputChangeName = (e) => {
       setTextName(e.target.value);
-      console.log(e.target.value)
     };
 
     const handleInputChangeEmail = (e) => {
       setTextEmail(e.target.value);
-      console.log(e.target.value)
     };
+
+    if(!registration){
+      return (
+        <div></div>
+      )
+    }
 
   return (
     <div className={classesLogin.content}>
@@ -46,7 +76,7 @@ function EditProfilePage() {
             <input
               type="text"
               // placeholder={user.user.username}
-              value = {textName} onChange = {(event)=>{handleInputChangeName(event.target.value)}}
+              value = {textName}
               {...register("username", {
                 required:
                   "Поле обязательно для заполнения!",
@@ -60,7 +90,7 @@ function EditProfilePage() {
                 },
               })}
               className={`${classesLogin.input} ${errors.username ? classesLogin.errorInput : ''}`}
-              // onChange={handleInputChange}
+              onChange={handleInputChangeName}
             />
             <div>
               {errors?.username && (
@@ -76,17 +106,17 @@ function EditProfilePage() {
             <input
               type="email"
               // placeholder={user.user.email}
-              value = {textEmail} onChange = {handleInputChangeEmail}
+              value = {textEmail}
               {...register("email", {
                 required:
                   "Поле обязательно для заполнения!",
                   pattern: {
                     value: /^[\w\.-]+@[\w\.-]+\.\w+$/,
                     message: 'email должен быть корректным почтовым адресом!'
-                  }
+                  },
               })}
               className={`${classesLogin.input} ${errors.email ? classesLogin.errorInput : ''}`}
-              // onChange={handleInputChange()}
+              onChange={handleInputChangeEmail}
             />
             <div>
               {errors?.email && (
@@ -127,8 +157,8 @@ function EditProfilePage() {
           </label>
 
           <label className={classesLogin.label}>Avatar image (url)</label>
-          <input type="url" name="url" placeholder="Avatar image"
-          {...register("url", {
+          <input type="url" placeholder="Avatar image"
+          {...register("image", {
             pattern: {
               value: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/ ,
               message: 'avatar image должен быть корректным url'
@@ -137,21 +167,19 @@ function EditProfilePage() {
           className={`${classesLogin.input} ${errors.password ? classesLogin.errorInput : ''}`}
           />
           <div>
-              {errors?.url && (
+              {errors?.image && (
                 <p className={classesLogin.errorMessage}>
-                  {errors?.url?.message || "Error"}
+                  {errors?.image?.message || "Error"}
                 </p>
               )}
             </div>
-        </form>
-
-          <input
+            <input
               type="submit"
               value={"Save"}
               className={classesLogin.buttonSabmit}
               disabled={!isValid}
             />
-          
+        </form>  
       </div>
     </div>
   );

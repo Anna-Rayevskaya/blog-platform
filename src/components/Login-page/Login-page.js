@@ -1,7 +1,13 @@
 import classes from './Login-page.module.scss'
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchUser } from '../../store/registrationReducer'
+import { NavLink } from 'react-router-dom'
 
 function LoginPage (){
+
+  const dispatch = useDispatch()
+
   const {
     register,
     handleSubmit,
@@ -11,8 +17,21 @@ function LoginPage (){
     mode: "onChange",
   });
 
+  const registration = useSelector((state)=> state.registration.registration)
+  console.log(registration)
+  if(registration){
+    return (
+      <div></div>
+    )
+  }
+
   const onSubmit = (data) => {
-    console.log(JSON.stringify(data)) 
+    const params = {"user":{
+      "email": String(data.email),
+      "password": String(data.password)}
+    }
+      
+    dispatch(fetchUser(params))
     reset()
   };
 
@@ -79,7 +98,7 @@ function LoginPage (){
               className={classes.buttonSabmit}
               disabled={!isValid}
             />
-      <p className={classes.text}>Don’t have an account? <span>Sign Up.</span></p>
+      <p className={classes.text}>Don’t have an account? <NavLink to='/sign-up'><span>Sign Up.</span></NavLink></p>
       </div>
 
       </form>

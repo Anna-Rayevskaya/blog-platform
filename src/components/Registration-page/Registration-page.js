@@ -1,11 +1,12 @@
 import classes from "./Registration-page.module.scss";
 import classesLogin from "../Login-page/Login-page.module.scss";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {fetchToken} from '../../store/registrationReducer'
+import { NavLink } from "react-router-dom";
 
 function RegistrationPage() {
-  const error = useSelector((state) => state.registration.error)
+
   const dispatch = useDispatch()
 
   const {
@@ -26,7 +27,6 @@ function RegistrationPage() {
       "password": String(data.password)}}
       
     dispatch(fetchToken(params))
-
     reset()
   };
   const password = watch('password')
@@ -179,7 +179,7 @@ function RegistrationPage() {
             />
 
             <p className={classesLogin.text}>
-              Already have an account? <span>Sign In.</span>
+              Already have an account? <NavLink to='/sign-in'><span>Sign In.</span></NavLink>
             </p>
           </div>
         </form>
