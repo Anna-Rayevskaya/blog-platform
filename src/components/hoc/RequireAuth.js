@@ -1,12 +1,13 @@
-import { Navigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom'
 
-const RequireAuth = ({ children }) => {
-    const registration = localStorage.getItem('registration')
-    if (!registration) {
-        return <Navigate to="/sign-in" replace />;
-    }
+// eslint-disable-next-line react/prop-types
+function RequireAuth({ children }) {
+  const registration = localStorage.getItem('registration')
+  if (!registration) {
+    return <Navigate to="/sign-in" replace />
+  }
 
-    return children;
+  return children
 }
 
-export default RequireAuth;
+export default RequireAuth

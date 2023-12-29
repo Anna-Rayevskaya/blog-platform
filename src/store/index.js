@@ -4,9 +4,9 @@ import articleReducer from './articleReducer'
 import registrationReducer from './registrationReducer'
 
 export default configureStore({
-    reducer:{
-        articles: articlesReducer,
-        article: articleReducer,
-        registration: registrationReducer,
-    }
+  reducer: {
+    articles: articlesReducer,
+    article: articleReducer,
+    registration: registrationReducer,
+  },
 })
