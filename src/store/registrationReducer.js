@@ -120,7 +120,6 @@ const registrationReducer = createSlice({
         builder
           .addCase(fetchToken.fulfilled, (state, action) => {
             console.log(action.payload.user)
-            localStorage.setItem('userToken', action.payload.user)
           })
           .addCase(fetchToken.rejected, (state, action) => {
             console.log('rejected fetchToken', action)

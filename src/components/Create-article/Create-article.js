@@ -11,6 +11,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+
 function CreateArticle({ action }) {
   const article = useSelector((state) => state.article.article);
   const { id } = useParams();
@@ -33,6 +34,7 @@ function CreateArticle({ action }) {
       setDescription(article.description || "");
     }
   }, [article]);
+  
 
   const {
     register,

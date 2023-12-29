@@ -1,6 +1,6 @@
 import { Routes, Route} from 'react-router-dom'
 
-import Footer from '../Footer'
+// import Footer from '../Footer'
 import Header from '../Header'
 import ListArticles from '../List-articles'
 import ExpandedArticle from '../Expanded-article'
@@ -15,7 +15,12 @@ function App() {
        
       <Routes>
       <Route path='/' element={<Header/>}>
-        <Route path='articles/' index element={<ListArticles/>}/>
+        <Route path='articles/' index element={
+          <>
+          <ListArticles/>
+          </>
+        }/>
+
         <Route path='articles/:id' element={<ExpandedArticle/>}/>
         <Route path='sign-in' element={<LoginPage/>}/>
         <Route path='sign-up' element={<RegistrationPage/>}/>

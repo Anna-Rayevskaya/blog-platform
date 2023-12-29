@@ -35,7 +35,7 @@ function LoginPage (){
     reset()
   };
 
-    return<div className={classes.content}>
+    return (<div className={classes.content}>
         <div className={classes.form}>
             <h3>Sign In</h3>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -106,5 +106,6 @@ function LoginPage (){
       
         </div>
          </div>
+         )
 }
 export default LoginPage
