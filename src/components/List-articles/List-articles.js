@@ -5,6 +5,7 @@ import {Spin } from 'antd'
 import { fetchArticles } from '../../store/articlesReducer'
 
 import ItemArticles from '../Item-article'
+import Footer from '../Footer'
 
 function ListArticles (){
   const articles = useSelector((state)=> state.articles.articles)
@@ -36,7 +37,9 @@ function ListArticles (){
 
     return <div className={classes.content}>
         {articles.map((article)=>{
-            return(<ItemArticles
+            return(
+              <>
+            <ItemArticles
                         key={articles.slug}
                         slug={article.slug}
                         title={article.title}
@@ -47,8 +50,13 @@ function ListArticles (){
                         image={article.author.image}
                         favoritesCount={article.favoritesCount}
 
-                    />)
+                    />
+                    
+                    </>
+                    )
         })}
+
+      <Footer/>
     </div>
 }
 

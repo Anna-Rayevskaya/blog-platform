@@ -1,11 +1,11 @@
 import classes from './Expanded-article.module.scss'
 import classesArticle from '../Item-article/Item-article.module.scss'
 import { useParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {fetchArticle} from '../../store/articleReducer'
 import { format } from "date-fns";
-import {Spin } from 'antd'
+import {Spin, Popconfirm  } from 'antd'
 import ReactMarkdown from 'react-markdown';
 import {deleteArticle} from '../../store/articleReducer'
 import { Link } from 'react-router-dom'
@@ -17,6 +17,11 @@ function ExpandedArticle (){
     const loading = useSelector((state)=> state.article.loading)
     const error = useSelector((state)=> state.article.error)
     let user = JSON.parse(localStorage.getItem('user'));
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleButtonClick = () => {
+        setIsClicked(!isClicked);
+      };
 
     console.log(article)
     useEffect(()=>{
@@ -61,10 +66,25 @@ if (loading) {
     return<div className={classes.content}>
     <div className={classes.article}>
     <h4 className={classesArticle.h4}>{article.title}</h4>
+    <button 
+      className={isClicked ? `${classes.heart} ${classes.clicked}` : classes.heart}
+      onClick={handleButtonClick}
+    ></button>
+    <span className={classes.spanHeart}>{article.favoritesCount}</span>
     <div>{getTags(article.tagList)}</div>
     <div className={classes.body}><ReactMarkdown>{article.body}</ReactMarkdown></div>
     {user && user.username === article.author.username && <>
-      <button className={classes.delete} onClick={onClickDelete}>Delete</button>
+      <Popconfirm
+    title="Delete the task"
+    description="Are you sure to delete this task?"
+    onConfirm={onClickDelete}
+    okText="Yes"
+    cancelText="No"
+    placement={'right'}
+  >
+    <button className={classes.delete}>Delete</button>
+  </Popconfirm>
+      
       <Link to='edit'><button className={`${classes.delete} ${classes.edit}`}>Edit</button></Link>
     </>}
     <div className={classesArticle.user}>

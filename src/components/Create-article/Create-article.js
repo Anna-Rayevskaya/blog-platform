@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 
 function CreateArticle({ action }) {
   const article = useSelector((state) => state.article.article);
-  const tags = useSelector((state) => state.article.tags);
   const { id } = useParams();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -48,7 +47,7 @@ function CreateArticle({ action }) {
     }
   });
 
-  let { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+  let { fields, append, remove } = useFieldArray(
     {
       control,
       name: "tagList",
@@ -60,11 +59,6 @@ function CreateArticle({ action }) {
     arr.map((obj)=>{
       result.push(obj.tag)
     })
-    // for (let key in object) {
-    //   if (key.startsWith("tag")) {
-    //     result.push(object[key]);
-    //   }
-    // }
     return result;
   }
 

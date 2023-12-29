@@ -2,10 +2,10 @@ import classes from './Login-page.module.scss'
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchUser } from '../../store/registrationReducer'
-import { NavLink } from 'react-router-dom'
+import { NavLink} from 'react-router-dom'
+
 
 function LoginPage (){
-
   const dispatch = useDispatch()
 
   const {

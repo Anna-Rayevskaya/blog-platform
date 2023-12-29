@@ -15,13 +15,7 @@ function App() {
        
       <Routes>
       <Route path='/' element={<Header/>}>
-        <Route path='articles/' index element={
-          <>
-          <ListArticles/>
-          <Footer/>
-          </>
-        }/>
-
+        <Route path='articles/' index element={<ListArticles/>}/>
         <Route path='articles/:id' element={<ExpandedArticle/>}/>
         <Route path='sign-in' element={<LoginPage/>}/>
         <Route path='sign-up' element={<RegistrationPage/>}/>
