@@ -12,13 +12,10 @@ function ListArticles (){
   const error = useSelector((state)=> state.articles.error)
   const page = useSelector((state)=> state.articles.page)
 
-  console.log(page)
-
     const dispatch = useDispatch()
 
-    console.log(articles)
     useEffect(()=>{
-          dispatch(fetchArticles((page-1)* 5))
+      dispatch(fetchArticles({'page':(page-1)* 5}))
     }, [dispatch, page])
 
     if (loading) {
@@ -43,11 +40,12 @@ function ListArticles (){
                         key={articles.slug}
                         slug={article.slug}
                         title={article.title}
-                        tagList={article.tagList}
+                        tagList={article.tagList || []}
                         body={article.body}
                         username={article.author.username}
                         data={article.createdAt}
                         image={article.author.image}
+                        favoritesCount={article.favoritesCount}
 
                     />)
         })}

@@ -6,6 +6,7 @@
   .article {
     width: 941px;
     height: auto;
+    min-height: 100px;
     background: var(--background-color-base, #fff);
     padding: 19px;
     padding-right: 42px;
@@ -32,4 +33,30 @@
   padding: 30px 50px;
   text-align: center;
   background: rgba(0, 0, 0, 0.05);
+}
+
+.delete {
+  position: absolute;
+  top: 93px;
+  right: 91px;
+  width: 78px;
+  height: 31px;
+  border-radius: 5px;
+  border: 1px solid var(--error-color, #f5222d);
+  padding: 6px 17px;
+  color: var(--error-color, #f5222d);
+  font-family: Inter UI;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14px;
+  background-color: transparent;
+  vertical-align: middle;
+}
+
+.edit {
+  right: 14px;
+  width: 65px;
+  border: 1px solid var(--success-color, #52c41a);
+  color: var(--success-color, #52c41a);
 }

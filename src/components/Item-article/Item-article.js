@@ -1,8 +1,15 @@
 import classes from './Item-article.module.scss'
 import { format } from "date-fns";
 import { Link } from 'react-router-dom'
+import { useState } from 'react';
 
-function ItemArticles ({title, tagList, body, username, image, data, slug}){
+function ItemArticles ({title, tagList, body, username, image, data, slug, favoritesCount}){
+
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleButtonClick = () => {
+        setIsClicked(!isClicked);
+      };
 
     function trimText(text, title) {
         if (title) {
@@ -18,11 +25,10 @@ function ItemArticles ({title, tagList, body, username, image, data, slug}){
         return text
       }
 
-    function getTags(arr) {
-        if (!arr) {
-            return null;
+      function getTags(arr) {
+        if (!arr ) {
+          return null; 
         }
-    
         return (
             <>
                 {arr.map((tag) => (
@@ -32,12 +38,18 @@ function ItemArticles ({title, tagList, body, username, image, data, slug}){
                 ))}
             </>
         );
-    }
+
+      }
 
     const link= `/articles/${slug}`
 
     return <div className={classes.content}>
         <Link to={link} className={classes.link}><h4 className={classes.h4}>{trimText(title, title)}</h4></Link>
+        <button 
+      className={isClicked ? `${classes.heart} ${classes.clicked}` : classes.heart}
+      onClick={handleButtonClick}
+    ></button>
+    <span className={classes.spanHeart}>{favoritesCount}</span>
         <div>{getTags(tagList)}</div>
         <div className={classes.body}>{trimText(body)}</div>
         <div className={classes.user}>

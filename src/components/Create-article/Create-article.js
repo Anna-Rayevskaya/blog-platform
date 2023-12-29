@@ -1,53 +1,141 @@
-import classes from './Create-article.module.scss'
+import classes from "./Create-article.module.scss";
 import classesLogin from "../Login-page/Login-page.module.scss";
-import { useForm } from "react-hook-form"
-import { useDispatch } from "react-redux";
-import {createArticle} from '../../store/articleReducer'
+import { useForm, useFieldArray } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createArticle,
+  fetchArticle,
+  updateArticle,
+  addTags,
+} from "../../store/articleReducer";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-function CreateArticle (){
+function CreateArticle({ action }) {
+  const article = useSelector((state) => state.article.article);
+  const tags = useSelector((state) => state.article.tags);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [title, setTitle] = useState(article?.title || "text");
+  const [description, setDescription] = useState(
+    article?.description || "text"
+  );
 
-    const dispatch = useDispatch()
-    const user = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    if (action) {
+      dispatch(fetchArticle(id));
+    }
+  }, [id]);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isValid },
-      } = useForm({
-        mode: "onChange",
-      });
+  useEffect(() => {
+    if (action && article) {
+      setTitle(article.title || "");
+      setDescription(article.description || "");
+    }
+  }, [article]);
 
-      const onSubmit = (params) => {
-        console.log(params)
-        const newParams = {"article":{
-          "title": String(params.title),
-          "description": String(params.description),
-          "body": String(params.body),
-          "tags": ["string"]}
-        }
-          console.log(newParams)
-        dispatch(createArticle({
-          'token': user.token,
-          'params': newParams,
-        }))
-        reset()
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      tagList: [{tag: ''}],
+    }
+  });
+
+  let { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: "tagList",
+    }
+  );
+
+  function findTags(arr) {
+    let result = [];
+    arr.map((obj)=>{
+      result.push(obj.tag)
+    })
+    // for (let key in object) {
+    //   if (key.startsWith("tag")) {
+    //     result.push(object[key]);
+    //   }
+    // }
+    return result;
+  }
+
+  const onSubmit = (params) => {
+    console.log(params);
+    let tags = findTags(params.tagList);
+    console.log(tags);
+    if (action) {
+      const newParams = {
+        article: {
+          title: String(params.title),
+          description: String(params.description),
+          body: String(params.body),
+          tagList: tags,
+        },
       };
+      dispatch(
+        updateArticle({
+          id: id,
+          token: user.token,
+          params: newParams,
+        })
+      );
+    } else {
+      const newParams = {
+        article: {
+          title: String(params.title),
+          description: String(params.description),
+          body: String(params.body),
+          tagList: tags,
+        },
+      };
+      dispatch(
+        createArticle({
+          token: user.token,
+          params: newParams,
+        })
+      );
+      reset();
+    }
+  };
 
-    return(
-        <div className={classesLogin.content}>
-            <div className={classes.form}>
-            <h3>Sign In</h3>
-            <form onSubmit={handleSubmit(onSubmit)}>
-             <label className={classesLogin.label}>
-             Title
+  const handleInputChangeTitle = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleInputChangeDescription = (e) => {
+    setDescription(e.target.value);
+  };
+
+  function tegAdd(e) {
+    dispatch(addTags(1));
+  }
+
+  return (
+    <div className={classesLogin.content}>
+      <div className={classes.form}>
+        <h3>Sign In</h3>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label className={classesLogin.label}>
+            Title
             <input
+              value={title}
               placeholder="Title"
               {...register("title", {
-                required:
-                  "Поле обязательно для заполнения!",
+                required: "Поле обязательно для заполнения!",
               })}
-              className={`${classes.input} ${errors.title ? classes.errorInput : ''}`}
+              className={`${classes.input} ${
+                errors.title ? classes.errorInput : ""
+              }`}
+              onChange={handleInputChangeTitle}
             />
             <div>
               {errors?.title && (
@@ -59,14 +147,17 @@ function CreateArticle (){
           </label>
 
           <label className={classesLogin.label}>
-          Short description
+            Short description
             <input
+              value={description}
               placeholder="Title"
               {...register("description", {
-                required:
-                  "Поле обязательно для заполнения!",
+                required: "Поле обязательно для заполнения!",
               })}
-              className={`${classes.input} ${errors.description ? classes.errorInput : ''}`}
+              className={`${classes.input} ${
+                errors.description ? classes.errorInput : ""
+              }`}
+              onChange={handleInputChangeDescription}
             />
             <div>
               {errors?.description && (
@@ -78,17 +169,16 @@ function CreateArticle (){
           </label>
 
           <label className={classesLogin.label}>
-             Text
-             <textarea 
-             placeholder="Text"
-             {...register("body", {
-                required:
-                  "Поле обязательно для заполнения!",
+            Text
+            <textarea
+              defaultValue={action && article ? article.body : null}
+              {...register("body", {
+                required: "Поле обязательно для заполнения!",
               })}
-              className={`${classes.input} ${classes.text} ${errors.body ? classes.errorInput : ''}`}
-              >
-
-            </textarea>
+              className={`${classes.input} ${classes.text} ${
+                errors.body ? classes.errorInput : ""
+              }`}
+            ></textarea>
             <div>
               {errors?.body && (
                 <p className={classesLogin.errorMessage}>
@@ -98,38 +188,51 @@ function CreateArticle (){
             </div>
           </label>
 
-                <div>
-                <div className={classesLogin.label}>Tags</div>
-            <input
-              placeholder="Tags"
-              className={`${classes.input} ${classes.tags} `}
-            />
+          <div className={classesLogin.label}>Tags</div>
 
-          <button type='button' className={classes.button} >Delete</button>
-
+            {fields.map((tag, index) => {
+              return (
+                <div key={index}>
+                  <input
+                    placeholder="Tags"
+                    className={`${classes.input} ${classes.tags}`}
+                    {...register(`tagList.${index}.tag`, {
+                      required: "Поле обязательно для заполнения!",
+                    })}
+                  />
+                  <button
+                    type="button"
+                    className={classes.button}
+                    onClick={() => {
+                      remove(index);
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
-          
-<div>
-            <input
-              placeholder="Tags"
-              className={`${classes.input} ${classes.tags}`}
-            />
-            <button type='button' className={classes.button}>Delete</button>
+              );
+            })}
 
-            </div>
+            <button
+              type="button"
+              className={`${classes.button} ${classes.buttonAdd}`}
+              onClick={() => {
+                append();
+              }}
+            >
+              Add tag
+            </button>
 
-            <button type='button' className={`${classes.button} ${classes.buttonAdd}`}>Add tag</button>
-      <input
-              type="submit"
-              value={"Send"}
-              className={classesLogin.buttonSabmit}
-              disabled={!isValid}
-            />
-
-      </form>
-        </div>
-        </div>
-    )
+          <input
+            type="submit"
+            value={"Send"}
+            className={classesLogin.buttonSabmit}
+            disabled={!isValid}
+          />
+        </form>
+      </div>
+    </div>
+  );
 }
 
-export default CreateArticle
+export default CreateArticle;

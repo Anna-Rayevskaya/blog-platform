@@ -7,6 +7,8 @@ import {fetchArticle} from '../../store/articleReducer'
 import { format } from "date-fns";
 import {Spin } from 'antd'
 import ReactMarkdown from 'react-markdown';
+import {deleteArticle} from '../../store/articleReducer'
+import { Link } from 'react-router-dom'
 
 function ExpandedArticle (){
     const dispatch = useDispatch()
@@ -14,11 +16,19 @@ function ExpandedArticle (){
     const article = useSelector((state)=> state.article.article)
     const loading = useSelector((state)=> state.article.loading)
     const error = useSelector((state)=> state.article.error)
+    let user = JSON.parse(localStorage.getItem('user'));
 
     console.log(article)
     useEffect(()=>{
         dispatch(fetchArticle(id))
   }, [id, dispatch])
+
+  function onClickDelete (e) {
+    dispatch(deleteArticle({
+      'token': user.token,
+      'id': id,
+    }))
+  }
 
   function getTags(arr) {
     if (!arr) {
@@ -53,6 +63,10 @@ if (loading) {
     <h4 className={classesArticle.h4}>{article.title}</h4>
     <div>{getTags(article.tagList)}</div>
     <div className={classes.body}><ReactMarkdown>{article.body}</ReactMarkdown></div>
+    {user && user.username === article.author.username && <>
+      <button className={classes.delete} onClick={onClickDelete}>Delete</button>
+      <Link to='edit'><button className={`${classes.delete} ${classes.edit}`}>Edit</button></Link>
+    </>}
     <div className={classesArticle.user}>
         <div>
         <div className={classesArticle.username}>{article.author.username}</div>

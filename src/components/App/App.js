@@ -27,6 +27,7 @@ function App() {
         <Route path='sign-up' element={<RegistrationPage/>}/>
         <Route path='profile' element={<EditProfilePage/>}/>
         <Route path='new-article' element={<CreateArticle/>}/>
+        <Route path='articles/:id/edit' element={<CreateArticle action='edit'/>}/>
 
         </Route>
       </Routes>

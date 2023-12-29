@@ -2,9 +2,15 @@ import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 
 export const fetchArticles = createAsyncThunk(
     'article/fetchArticles',
-    async (namber, { rejectWithValue }) => {
+    async (obj, { rejectWithValue }) => {
         try{
-            const url =  `https://blog.kata.academy/api/articles?limit=5&offset=${namber}`
+            // let url = null
+            // if(obj.author){
+            //     url = `https://blog.kata.academy/api/articles?author=${obj.author}&limit=5&offset=${obj.page}`
+            // } else{
+            //     url =  `https://blog.kata.academy/api/articles?limit=5&offset=${obj.page}`
+            // }
+            let url =  `https://blog.kata.academy/api/articles?limit=5&offset=${obj.page}`
             const res = await fetch(url)
     
             if(!res.ok){

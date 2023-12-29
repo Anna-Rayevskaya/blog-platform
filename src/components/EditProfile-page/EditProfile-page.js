@@ -75,7 +75,6 @@ function EditProfilePage() {
             Username
             <input
               type="text"
-              // placeholder={user.user.username}
               value = {textName}
               {...register("username", {
                 required:
@@ -105,7 +104,6 @@ function EditProfilePage() {
             Email address
             <input
               type="email"
-              // placeholder={user.user.email}
               value = {textEmail}
               {...register("email", {
                 required:
