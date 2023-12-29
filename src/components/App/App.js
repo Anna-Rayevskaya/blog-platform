@@ -8,24 +8,27 @@ import LoginPage from '../Login-page'
 import RegistrationPage from '../Registration-page'
 import EditProfilePage from '../EditProfile-page'
 import CreateArticle from '../Create-article'
+import RequireAuth from '../hoc/RequireAuth'
 
 function App() {
+
   return (
     <div >
        
       <Routes>
       <Route path='/' element={<Header/>}>
-        <Route path='articles/' index element={
-          <>
-          <ListArticles/>
-          </>
-        }/>
+      <Route  index element={<ListArticles/>}/>
+        <Route path='articles/' element={<ListArticles/>}/>
 
         <Route path='articles/:id' element={<ExpandedArticle/>}/>
         <Route path='sign-in' element={<LoginPage/>}/>
         <Route path='sign-up' element={<RegistrationPage/>}/>
         <Route path='profile' element={<EditProfilePage/>}/>
-        <Route path='new-article' element={<CreateArticle/>}/>
+        <Route path='new-article' element={ 
+        <RequireAuth >
+        <CreateArticle/>
+        </RequireAuth>
+      }/>
         <Route path='articles/:id/edit' element={<CreateArticle action='edit'/>}/>
 
         </Route>

@@ -4,9 +4,20 @@ export const fetchArticle = createAsyncThunk(
     'article/fetchArticle',
     async (id, { rejectWithValue }) => {
         try{
+            let user = JSON.parse(localStorage.getItem('user'))
             const url =  `https://blog.kata.academy/api/articles/${id}`
+            let res
+
+            if(!user.token){
             const res = await fetch(url)
-    
+        } else{
+            res = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    "Authorization": `Token ${user.token}`
+                }
+            })
+        }
             if(!res.ok){
                 throw  new Error(`couldn't get article ${res.status}`)
             }
@@ -103,14 +114,13 @@ export const updateArticle = createAsyncThunk(
     }
 ) 
 
+
 const articleReducer = createSlice({
     name: 'article',
     initialState:{
         article: null,
         loading: true,
         error: false,
-        myArticles: null,
-        tags: [''],
     },
     reducers:{
         addTags(state, action){

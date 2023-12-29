@@ -49,7 +49,7 @@ function Header() {
               />
             </Link>
 
-            <Link to="#">
+            <Link to="/sign-in">
               <button className={classes.logOut} onClick={onClickLogOut}>
                 Log Out
               </button>

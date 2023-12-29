@@ -1,11 +1,13 @@
 import classes from './Login-page.module.scss'
 import { useForm } from "react-hook-form"
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { fetchUser } from '../../store/registrationReducer'
 import { NavLink} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 
 function LoginPage (){
+  const navigate = useNavigate();
   const dispatch = useDispatch()
 
   const {
@@ -17,14 +19,6 @@ function LoginPage (){
     mode: "onChange",
   });
 
-  const registration = useSelector((state)=> state.registration.registration)
-  console.log(registration)
-  if(registration){
-    return (
-      <div></div>
-    )
-  }
-
   const onSubmit = (data) => {
     const params = {"user":{
       "email": String(data.email),
@@ -33,6 +27,7 @@ function LoginPage (){
       
     dispatch(fetchUser(params))
     reset()
+    navigate("/");
   };
 
     return (<div className={classes.content}>

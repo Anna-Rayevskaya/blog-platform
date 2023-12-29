@@ -1,15 +1,9 @@
 import classes from './Item-article.module.scss'
 import { format } from "date-fns";
-import { Link } from 'react-router-dom'
-import { useState } from 'react';
+import Favorites from '../Favorites'
 
-function ItemArticles ({title, tagList, body, username, image, data, slug, favoritesCount}){
-
-    const [isClicked, setIsClicked] = useState(false);
-
-    const handleButtonClick = () => {
-        setIsClicked(!isClicked);
-      };
+function ItemArticles ({title, tagList, body, username, image, data, slug, favoritesCount, favorited}){
+  
 
     function trimText(text, title) {
         if (title) {
@@ -44,12 +38,7 @@ function ItemArticles ({title, tagList, body, username, image, data, slug, favor
     const link= `/articles/${slug}`
 
     return <div className={classes.content}>
-        <Link to={link} className={classes.link}><h4 className={classes.h4}>{trimText(title, title)}</h4></Link>
-        <button 
-      className={isClicked ? `${classes.heart} ${classes.clicked}` : classes.heart}
-      onClick={handleButtonClick}
-    ></button>
-    <span className={classes.spanHeart}>{favoritesCount}</span>
+      <Favorites link={link} text={trimText(title, title) } favoritesCount={favoritesCount} slug= {slug} favorited={favorited}/>
         <div>{getTags(tagList)}</div>
         <div className={classes.body}>{trimText(body)}</div>
         <div className={classes.user}>

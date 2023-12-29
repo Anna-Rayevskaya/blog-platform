@@ -3,16 +3,24 @@ import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 export const fetchArticles = createAsyncThunk(
     'article/fetchArticles',
     async (obj, { rejectWithValue }) => {
+        
         try{
-            // let url = null
-            // if(obj.author){
-            //     url = `https://blog.kata.academy/api/articles?author=${obj.author}&limit=5&offset=${obj.page}`
-            // } else{
-            //     url =  `https://blog.kata.academy/api/articles?limit=5&offset=${obj.page}`
-            // }
+            let user = JSON.parse(localStorage.getItem('user'))
             let url =  `https://blog.kata.academy/api/articles?limit=5&offset=${obj.page}`
-            const res = await fetch(url)
-    
+
+            let res
+
+            if(!user.token){
+                res = await fetch(url)
+            } else{
+                res = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        "Authorization": `Token ${user.token}`
+                    }
+                })
+            }
+            
             if(!res.ok){
                 throw  new Error(`failed to get list of articles ${res.status}`)
             }
@@ -26,6 +34,58 @@ export const fetchArticles = createAsyncThunk(
     }
 ) 
 
+export const addFavoritesCount = createAsyncThunk(
+    'articles/addFavoritesCount',
+    async (data, { rejectWithValue }) => {
+        try{
+            const url =  `https://blog.kata.academy/api/articles/${data.id}/favorite`
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Token ${data.token}`
+                }
+            })
+    
+            if(!res.ok){
+                throw  new Error(`couldn't create articles ${res.status}`)
+            }
+    
+            const result = await res.json()
+            return result
+
+        } catch(error){
+            return rejectWithValue(error.message)
+        }
+    
+    }
+) 
+
+export const reduceFavoritesCount = createAsyncThunk(
+    'articles/reduceFavoritesCount',
+    async (data, { rejectWithValue }) => {
+        try{
+            const url =  `https://blog.kata.academy/api/articles/${data.id}/favorite`
+            const res = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Token ${data.token}`
+                }
+            })
+    
+            if(!res.ok){
+                throw  new Error(`couldn't create articles ${res.status}`)
+            }
+    
+            const result = await res.json()
+            return result
+
+        } catch(error){
+            return rejectWithValue(error.message)
+        }
+    
+    }
+) 
+
 const articlesReducer = createSlice({
     name: 'articles',
     initialState:{
@@ -33,10 +93,10 @@ const articlesReducer = createSlice({
         loading: true,
         error: false,
         page: 1,
+        favorites:false
     },
     reducers:{
         changePage (state, action){
-            console.log(action.payload)
             state.page = action.payload;
         }
 
@@ -49,8 +109,16 @@ const articlesReducer = createSlice({
           })
           .addCase(fetchArticles.rejected, (state, action) => {
             state.error = true
-            console.log( action)
           })
+
+          .addCase(addFavoritesCount.fulfilled, (state, action) => {
+            state.favorites = !state.favorites
+          })
+
+          .addCase(reduceFavoritesCount.fulfilled, (state, action) => {
+            state.favorites = !state.favorites
+          })
+          
         }
 })
 

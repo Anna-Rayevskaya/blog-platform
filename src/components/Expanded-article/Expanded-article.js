@@ -9,6 +9,7 @@ import {Spin, Popconfirm  } from 'antd'
 import ReactMarkdown from 'react-markdown';
 import {deleteArticle} from '../../store/articleReducer'
 import { Link } from 'react-router-dom'
+import Favorites from '../Favorites'
 
 function ExpandedArticle (){
     const dispatch = useDispatch()
@@ -16,6 +17,7 @@ function ExpandedArticle (){
     const article = useSelector((state)=> state.article.article)
     const loading = useSelector((state)=> state.article.loading)
     const error = useSelector((state)=> state.article.error)
+    const favorited= useSelector((state)=> state.articles.favorites)
     let user = JSON.parse(localStorage.getItem('user'));
     const [isClicked, setIsClicked] = useState(false);
 
@@ -23,10 +25,9 @@ function ExpandedArticle (){
         setIsClicked(!isClicked);
       };
 
-    console.log(article)
     useEffect(()=>{
         dispatch(fetchArticle(id))
-  }, [id, dispatch])
+  }, [id, dispatch, favorited])
 
   function onClickDelete (e) {
     dispatch(deleteArticle({
@@ -65,12 +66,7 @@ if (loading) {
 
     return<div className={classes.content}>
     <div className={classes.article}>
-    <h4 className={classesArticle.h4}>{article.title}</h4>
-    <button 
-      className={isClicked ? `${classes.heart} ${classes.clicked}` : classes.heart}
-      onClick={handleButtonClick}
-    ></button>
-    <span className={classes.spanHeart}>{article.favoritesCount}</span>
+      <Favorites text={article.title} favoritesCount={article.favoritesCount} slug={id} favorited={article.favorited}/>
     <div>{getTags(article.tagList)}</div>
     <div className={classes.body}><ReactMarkdown>{article.body}</ReactMarkdown></div>
     {user && user.username === article.author.username && <>
